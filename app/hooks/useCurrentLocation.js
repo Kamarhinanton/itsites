@@ -1,7 +1,5 @@
 import * as Location from "expo-location";
-import axios from "axios";
 import {useEffect, useState} from "react";
-import {useFetchWeatherQuery} from "../api/getWeather";
 
 const useCurrentRegion = () => {
   const [region, setRegion] = useState('');
