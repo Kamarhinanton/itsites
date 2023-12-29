@@ -4,10 +4,14 @@ import {useFetchWeatherQuery} from "../../api/getWeather";
 import {useDispatch, useSelector} from "react-redux";
 import {selectIsDarkTheme, toggleTheme} from "../../store/themeSlice";
 import styles from "../../styles/theme.style";
+import {useCurrentRegion} from "../../hooks/useCurrentLocation";
 
-const HomeContent = ({region}) => {
+const HomeContent = () => {
   const [days, setDays] = useState(1)
-  const {data, error, isLoading} = useFetchWeatherQuery({region, days});
+  const {region} = useCurrentRegion()
+  const {data, error, isLoading} = useFetchWeatherQuery({
+    region, days
+  }, {skip: !region});
   const dispatch = useDispatch();
   const isDarkTheme = useSelector(selectIsDarkTheme);
 
@@ -17,8 +21,9 @@ const HomeContent = ({region}) => {
 
   return (
     <View style={[{height: '100%'}, styles.bg(isDarkTheme)]}>
+      <Text style={styles.text(isDarkTheme)}>{region}</Text>
       {data && data.map((day) => (
-        <Text style={styles.text(isDarkTheme)} key={day.date_epoch}>Avg Temperature: {day.day.avgtemp_c}</Text>
+        <Text style={styles.text(isDarkTheme)} key={day.date_epoch}>Temperature: {day.day.avgtemp_c}deg</Text>
       ))}
       <TouchableOpacity onPress={() => setDays(3)}>
         <Text style={styles.text(isDarkTheme)}>get 3 days</Text>
